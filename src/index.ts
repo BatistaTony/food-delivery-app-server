@@ -1,17 +1,15 @@
-import express from "express";
-import { dbInstance } from "./database";
-import { cartRoutes } from "./routes/carrinho";
-import { clientRoutes } from "./routes/cliente";
-import { productRoutes } from "./routes/pizza";
-import { userRoutes } from "./routes/user";
+import express, { Response } from "express";
+import { makeAppRoutes } from "./routes";
+
 const app = express();
 
 app.use(express.json());
 
-app.use("/user", userRoutes);
-app.use("/pizza", productRoutes);
-app.use("/cart", cartRoutes);
-app.use("/cliente", clientRoutes);
+makeAppRoutes(app);
+
+app.get("/", (_, res: Response) => {
+  return res.json({ message: "welcome to the server" });
+});
 
 app.listen(5000, () => {
   console.log("Server is running on port 5000....");

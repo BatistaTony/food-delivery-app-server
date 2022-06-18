@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const pizzaSchema = mongoose.Schema({
+const productSchema = mongoose.Schema({
   nome: {
     type: String,
     required: true,
@@ -39,4 +39,4 @@ const pizzaSchema = mongoose.Schema({
   },
 });
 
-export const Pizza = mongoose.model("pizza", pizzaSchema);
+export const Product = mongoose.model("product", productSchema);

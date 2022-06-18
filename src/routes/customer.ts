@@ -1,26 +1,26 @@
 import { Router } from "express";
-import { Cliente } from "../models/cliente";
+import { Customer } from "../models/customer";
 import * as bcrypt from "bcryptjs";
 import {
   validationLogin,
   validationRegister,
   validationUpdate,
-} from "./validationCliente";
+} from "../utils/validation-customer";
 import path from "path";
 import multer from "multer";
 
-const clientRoutes = Router();
+const customerRoutes = Router();
 
-clientRoutes.get("/get", async (req: any, res: any) => {
+customerRoutes.get("/get", async (req: any, res: any) => {
   try {
-    const allclients = await Cliente.find();
-    res.json(allclients);
+    const allcustomers = await Customer.find();
+    res.json(allcustomers);
   } catch (error) {
     res.json(error);
   }
 });
 
-clientRoutes.post("/register", async (req: any, res: any) => {
+customerRoutes.post("/register", async (req: any, res: any) => {
   const { error } = validationRegister(req.body);
 
   if (error) {
@@ -37,7 +37,7 @@ clientRoutes.post("/register", async (req: any, res: any) => {
       }
     }
 
-    const clienteObj = new Cliente({
+    const CustomerObj = new Customer({
       img: imgValue(),
       nome: req.body.nome,
       telefone: req.body.telefone,
@@ -45,7 +45,7 @@ clientRoutes.post("/register", async (req: any, res: any) => {
       senha: hashedpassword,
     });
 
-    const telefoneExist = await Cliente.findOne({
+    const telefoneExist = await Customer.findOne({
       telefone: req.body.telefone,
     });
 
@@ -53,8 +53,8 @@ clientRoutes.post("/register", async (req: any, res: any) => {
       res.json({ message: "Número do telefone já existe" });
     } else {
       try {
-        const savedCliente = await clienteObj.save();
-        res.json({ cliente: savedCliente });
+        const savedCustomer = await CustomerObj.save();
+        res.json({ Customer: savedCustomer });
       } catch (error) {
         res.json({ message: error });
       }
@@ -62,26 +62,26 @@ clientRoutes.post("/register", async (req: any, res: any) => {
   }
 });
 
-clientRoutes.delete("/delete", async (req: any, res: any) => {
+customerRoutes.delete("/delete", async (req: any, res: any) => {
   const id = req.body.id;
 
   try {
-    const removedCliente = await Cliente.findOneAndRemove({ _id: id });
-    res.json(removedCliente);
+    const removedCustomer = await Customer.findOneAndRemove({ _id: id });
+    res.json(removedCustomer);
   } catch (error) {
     res.json(error);
   }
 });
 
-clientRoutes.post("/getOne", async (req: any, res: any) => {
+customerRoutes.post("/getOne", async (req: any, res: any) => {
   const id = req.body.id;
 
   if (id) {
     try {
-      const clienteEnc = await Cliente.findOne({ _id: id });
+      const CustomerEnc = await Customer.findOne({ _id: id });
 
-      if (clienteEnc) {
-        res.json(clienteEnc);
+      if (CustomerEnc) {
+        res.json(CustomerEnc);
       } else {
         res.json({ message: "Utilizador não encontrado" });
       }
@@ -93,7 +93,7 @@ clientRoutes.post("/getOne", async (req: any, res: any) => {
   }
 });
 
-clientRoutes.patch("/update", async (req: any, res: any) => {
+customerRoutes.patch("/update", async (req: any, res: any) => {
   const { error } = validationUpdate(req.body);
 
   if (error) {
@@ -110,13 +110,13 @@ clientRoutes.patch("/update", async (req: any, res: any) => {
       endereco: req.body.endereco,
     };
 
-    const userExist = await Cliente.findOne({ _id: user.id });
+    const userExist = await Customer.findOne({ _id: user.id });
 
     if (userExist) {
       const validaUser = await bcrypt.compare(user.senha, userExist.senha);
 
       if (validaUser) {
-        const updatedUser = await Cliente.findOneAndUpdate(
+        const updatedUser = await Customer.findOneAndUpdate(
           { _id: userExist.id },
           {
             nome: userobj.nome,
@@ -135,25 +135,30 @@ clientRoutes.patch("/update", async (req: any, res: any) => {
   }
 });
 
-clientRoutes.post("/login", async (req: any, res: any) => {
+customerRoutes.post("/login", async (req: any, res: any) => {
   const { error } = validationLogin(req.body);
 
   if (error) {
     res.json({ message: error.details[0].message });
   } else {
-    const cliente = {
+    const Customer = {
       telefone: req.body.telefone,
       senha: req.body.senha,
     };
 
     try {
-      const clienteEnc = await Cliente.findOne({ telefone: cliente.telefone });
+      const CustomerEnc = await Customer.findOne({
+        telefone: Customer.telefone,
+      });
 
-      if (clienteEnc) {
-        const validUser = await bcrypt.compare(cliente.senha, clienteEnc.senha);
+      if (CustomerEnc) {
+        const validUser = await bcrypt.compare(
+          Customer.senha,
+          CustomerEnc.senha
+        );
 
         if (validUser) {
-          res.json({ cliente: clienteEnc });
+          res.json({ Customer: CustomerEnc });
         } else {
           res.json({ message: "Utilizador não encontrado" });
         }
@@ -166,15 +171,15 @@ clientRoutes.post("/login", async (req: any, res: any) => {
   }
 });
 
-clientRoutes.post("/uploadPhoto/:userid", async (req: any, res: any) => {
+customerRoutes.post("/uploadPhoto/:userid", async (req: any, res: any) => {
   try {
     const storage = multer.diskStorage({
-      destination: "../cliente/public/img/avatar",
+      destination: "../Customer/public/img/avatar",
       filename: (req: any, file: any, cb: any) => {
         cb(null, req.params.userid + path.extname(file.originalname));
 
         try {
-          const updatedCliente = Cliente.findOneAndUpdate(
+          const updatedCustomer = Customer.findOneAndUpdate(
             { _id: req.params.userid },
             { img: req.params.userid + path.extname(file.originalname) }
           );
@@ -199,4 +204,4 @@ clientRoutes.post("/uploadPhoto/:userid", async (req: any, res: any) => {
   }
 });
 
-export { clientRoutes };
+export { customerRoutes };

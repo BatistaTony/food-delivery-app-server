@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { Cart } from "../models/carrinho";
-import { Cliente } from "../models/cliente";
-import { Pizza } from "../models/pizza";
+import { Cart } from "../models/cart";
+import { Customer } from "../models/customer";
+import { Product } from "../models/product";
 
 const cartRoutes = Router();
 
@@ -63,10 +63,12 @@ cartRoutes.get("/getCartsAC", async (req: any, res: any) => {
 
 cartRoutes.post("/postCart", async (req: any, res: any) => {
   try {
-    const clienteExist = await Cliente.findOne({ _id: req.body.userid });
-    const pizzaExist = await Pizza.findOne({ _id: req.body.producto.pizza.id });
+    const CustomerExist = await Customer.findOne({ _id: req.body.userid });
+    const productExist = await Product.findOne({
+      _id: req.body.producto.product.id,
+    });
 
-    if (clienteExist && pizzaExist) {
+    if (CustomerExist && productExist) {
       const cartExist = await Cart.findOne({
         userid: req.body.userid,
         status: "Pendente",
@@ -96,14 +98,14 @@ cartRoutes.post("/postCart", async (req: any, res: any) => {
           }
         }
       } else {
-        const userObj = await Cliente.findOne({ _id: req.body.userid });
+        const userObj = await Customer.findOne({ _id: req.body.userid });
 
         const cart = new Cart({
           userid: req.body.userid,
           producto: req.body.producto,
           endereco: req.body.endereco
             ? req.body.endereco
-            : clienteExist.endereco,
+            : CustomerExist.endereco,
           userObj: userObj,
           data_car: req.body.data_car,
         });
@@ -126,7 +128,7 @@ cartRoutes.post("/postCart", async (req: any, res: any) => {
   }
 });
 
-cartRoutes.post("/deletePizza/:id", async (req: any, res: any) => {
+cartRoutes.post("/deleteproduct/:id", async (req: any, res: any) => {
   try {
     const producto = req.body.producto;
 

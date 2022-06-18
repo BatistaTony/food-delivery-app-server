@@ -8,7 +8,7 @@ const Carrinho = new mongoose.Schema({
   producto: {
     type: Array,
     required: true,
-    pizza: {
+    product: {
       type: Object,
       required: true,
 
