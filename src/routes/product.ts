@@ -1,19 +1,21 @@
-import { Router } from "express";
-import { Product } from "../models/product";
+import { Router, Response, Request } from "express";
+import { Prisma, PrismaClient, Product } from "@prisma/client";
+import { uid } from "uid";
+const prisma = new PrismaClient();
 
 const productRoutes = Router();
 
-productRoutes.get("/getAll", async (req: any, res: any) => {
+productRoutes.get("/getAll", async (req: Request, res: Response) => {
   console.log("working");
-  try {
-    const products = await Product.find();
-    res.json({ products: products });
-  } catch (err) {
-    res.json({ message: err });
-  }
+  // try {
+  //   const products = await Product.find();
+  //   res.json({ products: products });
+  // } catch (err) {
+  //   res.json({ message: err });
+  // }
 });
 
-productRoutes.get("/getOne/:id", async (req: any, res: any) => {
+productRoutes.get("/getOne/:id", async (req: Request, res: Response) => {
   var product_id = req.params.id;
 
   if (product_id) {
@@ -28,28 +30,31 @@ productRoutes.get("/getOne/:id", async (req: any, res: any) => {
   }
 });
 
-productRoutes.post("/register", async (req: any, res: any) => {
-  const productExist = await Product.findOne({ nome: req.body.nome });
+interface ProducType {
+  name: string;
+  cover: string;
+  description: string;
+  price: number;
+}
 
-  if (!productExist) {
-    const productObj = new Product({
-      nome: req.body.nome,
-      sabores: req.body.sabores,
-      tamanho: req.body.tamanho,
-    });
+productRoutes.post("/create", async (req: Request, res: Response) => {
+  const { name, cover, description, price }: ProducType = req.body;
 
-    try {
-      const productsaved = await productObj.save();
-      res.json({ product: "ADICIONADA COM SUCESSO" });
-    } catch (error) {
-      res.json({ message: error });
-    }
-  } else {
-    res.json({ message: "NOME DA product JÁ EXISTE" });
-  }
+  const product: Product = await prisma.product.create({
+    data: {
+      cover: cover,
+      description: description,
+      id: uid(16),
+      name: name,
+      price: price,
+    },
+  });
+
+  console.log(product);
+  res.json(product);
 });
 
-productRoutes.delete("/delete/:id", async (req: any, res: any) => {
+productRoutes.delete("/delete/:id", async (req: Request, res: Response) => {
   const product_id = req.params.id;
 
   if (product_id) {
@@ -66,7 +71,7 @@ productRoutes.delete("/delete/:id", async (req: any, res: any) => {
   }
 });
 
-productRoutes.post("/update", async (req: any, res: any) => {
+productRoutes.post("/update", async (req: Request, res: Response) => {
   var product_id = await req.body.id;
 
   const productObj = new Product({

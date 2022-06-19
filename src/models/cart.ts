@@ -81,4 +81,4 @@ const Carrinho = new mongoose.Schema({
   },
 });
 
-export const Cart = mongoose.model("carrinho", Carrinho);
+export const Cart: any = {};

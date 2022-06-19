@@ -15,4 +15,4 @@ const userSchema = mongoose.Schema({
   },
 });
 
-export const User = mongoose.model("user", userSchema);
+export const User: any = {}
