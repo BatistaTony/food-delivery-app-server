@@ -53,9 +53,9 @@ enum CartStatus {
 }
 
 model Cart {
-  id           String     @id
-  customer     Customer   @relation(fields: [id], references: [id])
-  products     Product[]
-  created_date DateTime
-  status       CartStatus
+  id         String     @id
+  customer   Customer   @relation(fields: [id], references: [id])
+  products   Product[]
+  created_at DateTime   @default(now()) @db.Timestamp()
+  status     CartStatus
 }
