@@ -1,19 +1,12 @@
 import { Router, Response, Request } from "express";
-import { CreateProductController } from "../controllers/product/create-product.controller";
 import { makeCreateProductController } from "../factories/controllers/make-create-product-controller";
-import { CreateProductService } from "../services/product/create-product.service";
+import { makeDeleteProductController } from "../factories/controllers/make-delete-product-controller";
+import { makeGetAllProductController } from "../factories/controllers/make-get-all-product-controller";
+import { makeUpdateProductController } from "../factories/controllers/make-update-product-controller";
 
 const productRoutes = Router();
 
-productRoutes.get("/getAll", async (req: Request, res: Response) => {
-  console.log("working");
-  // try {
-  //   const products = await Product.find();
-  //   res.json({ products: products });
-  // } catch (err) {
-  //   res.json({ message: err });
-  // }
-});
+productRoutes.get("/getAll", makeGetAllProductController());
 
 productRoutes.get("/getOne/:id", async (req: Request, res: Response) => {
   // const product_id = req.params.id;
@@ -33,51 +26,7 @@ productRoutes.get("/getOne/:id", async (req: Request, res: Response) => {
 
 
 productRoutes.post("/create", makeCreateProductController());
-
-productRoutes.delete("/delete/:id", async (req: Request, res: Response) => {
-  // const product_id = req.params.id;
-
-  // if (product_id) {
-  //   try {
-  //     const productDeleted = await Product.findOneAndDelete({
-  //       _id: product_id,
-  //     });
-  //     res.json(productDeleted);
-  //   } catch (error) {
-  //     res.json({ message: error });
-  //   }
-  // } else {
-  //   res.json({ message: "Id do producto ?" });
-  // }
-});
-
-productRoutes.post("/update", async (req: Request, res: Response) => {
-  // const product_id = await req.body.id;
-
-  // const productObj = new Product({
-  //   nome: req.body.nome,
-  //   sabores: req.body.sabores,
-  //   tamanho: req.body.tamanho,
-  // });
-
-  // if (product_id) {
-  //   const productUpdated = await Product.findOneAndUpdate(
-  //     { _id: product_id },
-  //     {
-  //       nome: productObj.nome,
-  //       sabores: productObj.sabores,
-  //       tamanho: productObj.tamanho,
-  //     }
-  //   );
-
-  //   if (productUpdated) {
-  //     res.json({ message: "product actualizado com sucesso" });
-  //   } else {
-  //     res.json({ message: "Erro ao actualizar a product" });
-  //   }
-  // } else {
-  //   res.json({ message: "id producto" });
-  // }
-});
+productRoutes.delete("/delete/:id", makeDeleteProductController());
+productRoutes.post("/update", makeUpdateProductController());
 
 export { productRoutes };
