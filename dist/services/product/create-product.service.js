@@ -12,7 +12,7 @@ class CreateProductService extends service_1.BaseService {
                 description: data.description,
                 name: data.name,
                 price: data.price,
-            }
+            },
         });
         return product;
     }

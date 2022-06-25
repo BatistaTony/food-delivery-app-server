@@ -1,21 +1,21 @@
-import dotenv from "dotenv";
-dotenv.config();
+import dotenv from 'dotenv'
 
-import express, { Response } from "express";
-import cors from "cors";
-import { makeAppRoutes } from "./routes";
+import express, { Response } from 'express'
+import cors from 'cors'
+import { makeAppRoutes } from './routes'
+dotenv.config()
 
-const app = express();
+const app = express()
 
-app.use(express.json());
-app.use(cors());
+app.use(express.json())
+app.use(cors())
 
-makeAppRoutes(app);
+makeAppRoutes(app)
 
-app.get("/", (_, res: Response) => {
-  return res.json({ message: "welcome to the server" });
-});
+app.get('/', (_, res: Response) => {
+  return res.json({ message: 'welcome to the server' })
+})
 
 app.listen(5000, () => {
-  console.log("Server is running on port 5000....");
-});
+  console.log('Server is running on port 5000....')
+})

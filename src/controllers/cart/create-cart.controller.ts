@@ -1,10 +1,10 @@
-import { Product as ProductEntity } from './../../Entities/product'
 import { Request } from 'express'
+import { Cart as CartEntity } from '../../Entities/cart'
 import { BaseController } from '../../typescript/controller'
 import { Service } from '../../typescript/service'
 
-export class UpdateProductController implements BaseController<ProductEntity> {
-  handler(service: Service<ProductEntity | null>) {
+export class CreateCartController implements BaseController<CartEntity> {
+  handler(service: Service<CartEntity>) {
     return async (req: Request) => {
       return await service.execute(req.body)
     }
