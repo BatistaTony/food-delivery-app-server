@@ -45,10 +45,9 @@ enum CartStatus {
 }
 
 model CartProduct {
-  id        String   @id
   quantity  Int
   cartId    String?
-  productId String
+  productId String   @id
   Cart      Cart?    @relation(fields: [cartId], references: [id])
   product   Product? @relation(fields: [productId], references: [id])
 }
