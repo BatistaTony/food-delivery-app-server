@@ -10,12 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model auth {
+model Auth {
   id         String   @id
   token      String
   entityId   String
-  create_at  DateTime @default(now()) @db.Timestamp(6)
-  updated_at DateTime @default(now()) @db.Timestamp(6)
+  create_at  DateTime @default(now())
+  updated_at DateTime @default(now())
 }
 
 model Customer {
@@ -27,21 +27,13 @@ model Customer {
   Cart     Cart[]
 }
 
-model manager {
-  id       String @id
-  name     String
-  password String
-}
-
 model Product {
-  id          String  @id @unique
+  id          String        @id @unique
   name        String
   description String
   price       Float
   cover       String
-  Cart        Cart?   @relation(fields: [cartId], references: [id])
-  cartId      String?
-
+  CartProduct CartProduct[]
 }
 
 enum CartStatus {
@@ -52,10 +44,20 @@ enum CartStatus {
   Lost
 }
 
+model CartProduct {
+  id        String   @id
+  quantity  Int
+  cartId    String?
+  productId String
+  Cart      Cart?    @relation(fields: [cartId], references: [id])
+  product   Product? @relation(fields: [productId], references: [id])
+}
+
 model Cart {
-  id         String     @id
-  customer   Customer   @relation(fields: [id], references: [id])
-  products   Product[]
-  created_at DateTime   @default(now()) @db.Timestamp()
+  id         String        @id @unique
+  customerId String
+  customer   Customer?     @relation(fields: [customerId], references: [id])
+  products   CartProduct[]
+  created_at DateTime      @default(now())
   status     CartStatus
 }
