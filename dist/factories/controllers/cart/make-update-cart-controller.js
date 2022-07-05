@@ -7,7 +7,7 @@ const makeUpdateCartController = () => async (req, res) => {
     const endpoint = new update_cart_controller_1.UpdateCartController().handler(new update_cart_service_1.UpdateCartService());
     try {
         const result = await endpoint(req);
-        res.json({ status: 500, msg: 'Something went wrong', data: result });
+        res.json({ status: 200, msg: 'updated successfuly', data: result });
     }
     catch (error) {
         res.json({

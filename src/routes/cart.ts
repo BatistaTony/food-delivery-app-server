@@ -1,9 +1,11 @@
 import { Router } from 'express'
 import { makeCreateCartController } from '../factories/controllers/cart/make-create-cart-controller'
+import { makeDeleteCartController } from '../factories/controllers/cart/make-delete-cart-controller'
+import { makeGetCartController } from '../factories/controllers/cart/make-get-cart-controller'
 import { makeUpdateCartController } from '../factories/controllers/cart/make-update-cart-controller'
 const cartRoutes = Router()
 
-cartRoutes.get('/getCarts', async (req: any, res: any) => {})
+cartRoutes.get('/', makeGetCartController())
 
 cartRoutes.get('/getCartsToday', async (req: any, res: any) => {})
 
@@ -19,7 +21,7 @@ cartRoutes.post('/create', makeCreateCartController())
 
 cartRoutes.post('/update', makeUpdateCartController())
 
-cartRoutes.post('/deleteproduct/:id', async (req: any, res: any) => {})
+cartRoutes.delete('/:id', makeDeleteCartController())
 
 cartRoutes.get('/getCart/:userid', async (req: any, res: any) => {})
 

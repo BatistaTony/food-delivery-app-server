@@ -9,7 +9,7 @@ class UpdateCartService extends service_1.BaseService {
                 quantity: product.quantity,
             },
             where: {
-                id: product.id,
+                productId: product.id,
             },
         });
         return updatedProducts;

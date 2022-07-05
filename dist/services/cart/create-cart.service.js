@@ -3,12 +3,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateCartService = void 0;
 const uid_1 = require("uid");
 const service_1 = require("../../typescript/service");
+// connectOrCreate: {
+//   create: {
+//     id: cart.customer.id,
+//     address: cart.customer.address,
+//     name: cart.customer.name,
+//     password: cart.customer.password,
+//     phone: cart.customer.phone,
+//   },
+//   where: {
+//     id: cart.customer.id,
+//   },
+// },
 class CreateCartService extends service_1.BaseService {
-    createManyProductForCart(products) {
+    createManyProductForCart(products, cartId) {
         return {
             createMany: {
                 data: products.map((prod) => ({
-                    id: (0, uid_1.uid)(),
                     productId: prod.id,
                     quantity: prod.quantity,
                 })),
@@ -17,16 +28,17 @@ class CreateCartService extends service_1.BaseService {
         };
     }
     async execute(cart) {
+        const cartId = (0, uid_1.uid)(16);
         const cartRes = await this.prisma.cart.create({
             data: {
-                id: (0, uid_1.uid)(16),
+                id: cartId,
                 status: 'Pending',
                 customer: {
                     connect: {
                         id: cart.customer.id,
                     },
                 },
-                products: this.createManyProductForCart(cart.products),
+                products: this.createManyProductForCart(cart.products, cartId),
             },
             include: {
                 customer: {

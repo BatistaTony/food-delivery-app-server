@@ -3,12 +3,24 @@ import { Cart } from '../../Entities/cart'
 import { Product } from '../../Entities/product'
 import { BaseService } from '../../typescript/service'
 
+// connectOrCreate: {
+//   create: {
+//     id: cart.customer.id,
+//     address: cart.customer.address,
+//     name: cart.customer.name,
+//     password: cart.customer.password,
+//     phone: cart.customer.phone,
+//   },
+//   where: {
+//     id: cart.customer.id,
+//   },
+// },
+
 export class CreateCartService extends BaseService {
-  createManyProductForCart(products: Product[]) {
+  createManyProductForCart(products: Product[], cartId: string) {
     return {
       createMany: {
         data: products.map((prod) => ({
-          id: uid(),
           productId: prod.id,
           quantity: prod.quantity as any,
         })),
@@ -18,16 +30,17 @@ export class CreateCartService extends BaseService {
   }
 
   async execute(cart: Cart): Promise<Cart> {
+    const cartId = uid(16)
     const cartRes = await this.prisma.cart.create({
       data: {
-        id: uid(16),
+        id: cartId,
         status: 'Pending',
         customer: {
           connect: {
             id: cart.customer.id,
           },
         },
-        products: this.createManyProductForCart(cart.products),
+        products: this.createManyProductForCart(cart.products, cartId),
       },
       include: {
         customer: {
@@ -42,6 +55,6 @@ export class CreateCartService extends BaseService {
       },
     })
 
-    return cartRes as any
+    return cartRes as unknown as Cart
   }
 }
