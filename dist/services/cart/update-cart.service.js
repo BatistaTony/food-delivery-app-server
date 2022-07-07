@@ -22,11 +22,6 @@ class UpdateCartService extends service_1.BaseService {
         }
         const newCart = await this.prisma.cart.update({
             data: {
-                customer: {
-                    connect: {
-                        id: cart.customer.id,
-                    },
-                },
                 status: cart.status,
             },
             where: {

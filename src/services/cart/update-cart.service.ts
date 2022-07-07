@@ -28,11 +28,6 @@ export class UpdateCartService extends BaseService {
 
     const newCart = await this.prisma.cart.update({
       data: {
-        customer: {
-          connect: {
-            id: cart.customer.id,
-          },
-        },
         status: cart.status as CartStatus,
       },
       where: {

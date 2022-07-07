@@ -12,7 +12,7 @@ export const makeUpdateCartController =
       res.json({
         status: 500,
         msg: 'Something went wrong',
-        data: error,
+        data: JSON.stringify(error),
       })
     }
   }
