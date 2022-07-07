@@ -1,11 +1,14 @@
 import { Router } from 'express'
 import { makeCreateCartController } from '../factories/controllers/cart/make-create-cart-controller'
 import { makeDeleteCartController } from '../factories/controllers/cart/make-delete-cart-controller'
+import { makeGetAllCartController } from '../factories/controllers/cart/make-get-all-cart-controller'
 import { makeGetCartController } from '../factories/controllers/cart/make-get-cart-controller'
 import { makeUpdateCartController } from '../factories/controllers/cart/make-update-cart-controller'
 const cartRoutes = Router()
 
 cartRoutes.get('/', makeGetCartController())
+
+cartRoutes.get('/all', makeGetAllCartController())
 
 cartRoutes.get('/getCartsToday', async (req: any, res: any) => {})
 
