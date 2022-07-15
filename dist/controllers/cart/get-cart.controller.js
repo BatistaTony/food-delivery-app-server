@@ -4,7 +4,10 @@ exports.GetCartController = void 0;
 class GetCartController {
     handler(service) {
         return async (req) => {
-            return await service.execute(req.body.customerId);
+            return await service.execute({
+                customerId: req.body.customerId,
+                status: req.body.status,
+            });
         };
     }
 }

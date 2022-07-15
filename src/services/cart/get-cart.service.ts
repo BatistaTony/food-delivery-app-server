@@ -1,12 +1,19 @@
+import { CartStatus } from '@prisma/client'
 import { Cart } from '../../Entities/cart'
 import { BaseService } from '../../typescript/service'
 
+interface Props {
+  customerId: string
+  status: CartStatus | undefined
+}
+
 export class GetCartService extends BaseService {
-  async execute(customerId: string): Promise<Cart | null> {
+  async execute({ customerId, status }: Props): Promise<Cart[] | null> {
     if (customerId) {
-      const cart = await this.prisma.cart.findFirst({
+      const cart = await this.prisma.cart.findMany({
         where: {
           customerId,
+          status,
         },
         include: {
           customer: {
@@ -21,7 +28,7 @@ export class GetCartService extends BaseService {
         },
       })
       if (cart) {
-        return cart as unknown as Cart
+        return cart as unknown as Cart[]
       } else {
         return null
       }

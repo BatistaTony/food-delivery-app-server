@@ -14,6 +14,7 @@ const makeGetCartController = () => async (req, res) => {
         });
     }
     catch (error) {
+        console.log(error);
         res.json({
             status: 500,
             msg: 'Something went wrong',

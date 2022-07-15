@@ -14,6 +14,7 @@ export const makeGetCartController =
         data: resp,
       })
     } catch (error) {
+      console.log(error)
       res.json({
         status: 500,
         msg: 'Something went wrong',
